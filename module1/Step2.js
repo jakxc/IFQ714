@@ -53,7 +53,6 @@ function countOnes(values) {
         if (isOne) numOnes++;
     }
  
-
     console.log(`Total ones: ${numOnes}`);
 }
 

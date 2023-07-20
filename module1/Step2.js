@@ -53,6 +53,7 @@ function countOnes(values) {
         if (isOne) numOnes++;
     }
  
+    // Can also do values.filter(el => el === 1).length;
     console.log(`Total ones: ${numOnes}`);
 }
 

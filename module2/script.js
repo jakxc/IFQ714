@@ -1,28 +1,13 @@
 // Step One
-const employeeOne = {
-                        "id": 1,
-                        "firstName": "John", 
-                        "lastName": "Smith", 
-                        "gender": "Male", 
-                        "age": 23, 
-                        "position": "Manager"
-                    }
-
-const saleOne = {
-                    "staffId": 1, 
-                    "item": "Wi-Fi Adapter", 
-                    "price": 40.00, 
-                    "date": "01-09-2022"
-                }     
+const employeeOne = JSON.parse('{"id":1,"firstName":"John","lastName":"Smith","gender":"Male","age":23,"position":"Manager"}') 
+const saleOne = JSON.parse('{"staffId":1,"item":"Wi-Fi Adapter","price":40,"date":"01-09-2022"}');
 
 // Step Two
 function outputEmployeeDetails(employee) {
-    console.log(`id: ${employee.id}\n 
+    console.log(`id: ${employee.id}\n
                 firstName: ${employee.firstName} lastname: ${employee.lastName}\n
-                gender: ${employee.gender}\n
-                age: ${employee.age}\n
-                position: ${employee.position}`)
-}
+                gender: ${employee.gender}\nage: ${employee.age}\n
+                position: ${employee.position}`)}
 
 function outputSaleDetails(sale) {
     console.log(`staffId: ${sale.staffId}\n 
@@ -61,14 +46,15 @@ function Sale(staffId, item, price, date) {
     }
     this.getDayOfSale = function() {
         const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-        const date = new Date(this.date);
-
+        const arr = this.date.split('-');
+        const newDate = `${arr[1]}-${arr[0]}-${arr[2]}`;
+        const date = new Date(newDate);
         return days[date.getDay()];
     }
 }
 
 const employeeTwo = new Employee(2, "Mary", "Sue", "female", 32, "salesperson");
-const saleTwo = new Sale(2, "Wi-Fi Adapter", 40.00, "03-09-2022");
+const saleTwo = new Sale(2, "Wi-Fi Adapter", 40.00, "03-09-2022"); 
 
 // Step Four
 const employers =  [employeeOne, employeeTwo];

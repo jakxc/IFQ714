@@ -4,16 +4,10 @@ const saleOne = JSON.parse('{"staffId":1,"item":"Wi-Fi Adapter","price":40,"date
 
 // Step Two
 function outputEmployeeDetails(employee) {
-    console.log(`id: ${employee.id}\n
-                firstName: ${employee.firstName} lastname: ${employee.lastName}\n
-                gender: ${employee.gender}\nage: ${employee.age}\n
-                position: ${employee.position}`)}
+    console.log(`id: ${employee.id}\nfirstName: ${employee.firstName} lastname: ${employee.lastName}\ngender: ${employee.gender}\nage: ${employee.age}\nposition: ${employee.position}`)}
 
 function outputSaleDetails(sale) {
-    console.log(`staffId: ${sale.staffId}\n 
-                item: ${sale.item}\n
-                price: ${sale.price}\n
-                date: ${sale.date}`)
+    console.log(`staffId: ${sale.staffId}\n item: ${sale.item}\nprice: ${sale.price}\ndate: ${sale.date}`)
 }
 
 // Step Three
@@ -57,7 +51,7 @@ const employeeTwo = new Employee(2, "Mary", "Sue", "female", 32, "salesperson");
 const saleTwo = new Sale(2, "Wi-Fi Adapter", 40.00, "03-09-2022"); 
 
 // Step Four
-const employers =  [employeeOne, employeeTwo];
+const employers = [employeeOne, employeeTwo];
 const sales = [saleOne, saleTwo];
 
 // Bonus Tasks

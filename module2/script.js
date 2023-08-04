@@ -18,12 +18,12 @@ function Employee(id, firstName, lastName, gender, age, position) {
     this.gender = gender;
     this.age = age;
     this.position = position;
-    this.displayInfo = function() {
-        outputEmployeeDetails(this);
-    }
-    this.toString = function() {
-        return `Id: ${this.id}, Full Name: ${this.firstName} ${this.lastName}, Gender: ${this.gender}, Age: ${this.age}, Position: ${this.position}`
-    }
+    // this.displayInfo = function() {
+    //     outputEmployeeDetails(this);
+    // }
+    // this.toString = function() {
+    //     return `Id: ${this.id}, Full Name: ${this.firstName} ${this.lastName}, Gender: ${this.gender}, Age: ${this.age}, Position: ${this.position}`
+    // }
 }
 
 
@@ -32,19 +32,19 @@ function Sale(staffId, item, price, date) {
     this.item = item;
     this.price = price;
     this.date = date;
-    this.displayInfo = function() {
-        outputSaleDetails(this);
-    }
-    this.toString = function() {
-        return `Staff member with Id ${this.staffId} sold ${this.item} for $${this.price} on ${this.date}`
-    }
-    this.getDayOfSale = function() {
-        const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-        const arr = this.date.split('-');
-        const newDate = `${arr[1]}-${arr[0]}-${arr[2]}`;
-        const date = new Date(newDate);
-        return days[date.getDay()];
-    }
+    // this.displayInfo = function() {
+    //     outputSaleDetails(this);
+    // }
+    // this.toString = function() {
+    //     return `Staff member with Id ${this.staffId} sold ${this.item} for $${this.price} on ${this.date}`
+    // }
+    // this.getDayOfSale = function() {
+    //     const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    //     const arr = this.date.split('-');
+    //     const newDate = `${arr[1]}-${arr[0]}-${arr[2]}`;
+    //     const date = new Date(newDate);
+    //     return days[date.getDay()];
+    // }
 }
 
 const employeeTwo = new Employee(2, "Mary", "Sue", "female", 32, "salesperson");
@@ -55,6 +55,13 @@ const employers = [employeeOne, employeeTwo];
 const sales = [saleOne, saleTwo];
 
 // Bonus Tasks
-console.log(employeeTwo.displayInfo());
-console.log(employeeTwo.toString());
-console.log(saleTwo.getDayOfSale());
+// console.log(employeeTwo.displayInfo());
+// console.log(employeeTwo.toString());
+// console.log(saleTwo.getDayOfSale());
+
+module.exports = {
+    Employee: Employee,
+    Sale: Sale,
+    outputEmployeeDetails: outputEmployeeDetails,
+    outputSaleDetails: outputSaleDetails
+}

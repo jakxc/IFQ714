@@ -1,5 +1,6 @@
 const sum = (a, b) => {
-    return a  + b;
+    if (typeof a !== 'number' || typeof b !== 'number') return null;
+    return a + b;
 }
 
 // Function for squaring numbers from a string, if it can be parsed.
@@ -14,4 +15,4 @@ const parseThenSquare = (input) => {
     }
 }
 
-module.exports = parseThenSquare;
+module.exports = {parseThenSquare: parseThenSquare, sum: sum};

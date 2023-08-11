@@ -39,12 +39,13 @@ function getMaxOrbitValue(dataSet, orbitProp) {
     const orbitalValues = dataSet.map(el => el[orbitProp]).filter(el => typeof el === 'number');
     if (orbitalValues.length === 0) return null;
     const maxOrbitalValue = Math.max(...orbitalValues);
-    // console.log(minOrbitalPeriod);
+    // console.log(maxOrbitalPeriod);
     return dataSet.filter(neo => neo[orbitProp] === maxOrbitalValue);
 } 
 
 function getAverageOrbitValue(dataSet, orbitProp) {
-    const validData = dataSet.filter(el => typeof el[orbitProp] === 'number')
+    const validData = dataSet.filter(el => typeof el[orbitProp] === 'number');
+    if (validData.length === 0) return null;
     const totalSize = validData.length;
     const totalSum = validData
                         .map(neo => neo[orbitProp])
@@ -56,16 +57,16 @@ function getAverageOrbitValue(dataSet, orbitProp) {
 function displayNeoInfo(neo) {    
     if (neo) {
         console.table(neo);
-        console.log(`Designation: ${neo.designation}
-        Discovery date: ${neo.discovery_date}
-        H_Mag: ${neo.h_mag}
-        MOID(AU): ${neo.moid_au}
-        Perihelion distance: ${neo.q_au_1}
-        Aphelion distance: ${neo.q_au_2}
-        Orbital period: ${neo.period_yr}
-        Orbital inclination: ${neo.i_deg}
-        PHA: ${neo.pha}
-        Orbit class: ${neo.orbit_class}`);
+        // console.log(`Designation: ${neo.designation}
+        // Discovery date: ${neo.discovery_date}
+        // H_Mag: ${neo.h_mag}
+        // MOID(AU): ${neo.moid_au}
+        // Perihelion distance: ${neo.q_au_1}
+        // Aphelion distance: ${neo.q_au_2}
+        // Orbital period: ${neo.period_yr}
+        // Orbital inclination: ${neo.i_deg}
+        // PHA: ${neo.pha}
+        // Orbit class: ${neo.orbit_class}`);
     } else {
         console.log(`${neo} cannot be found in the data set`); 
     }

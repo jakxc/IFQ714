@@ -6,6 +6,7 @@ const getNeoByPha = functions.getNeoByPha;
 const getMinOrbitValue = functions.getMinOrbitValue;
 const getMaxOrbitValue = functions.getMaxOrbitValue;
 const getAverageOrbitValue = functions.getAverageOrbitValue;
+const displayNeoInfo = functions.displayNeoInfo;
 
 // NEO Data constructor
 function NeoData(data) {
@@ -31,6 +32,9 @@ function NeoData(data) {
     this.getAverageOrbitValue = function(orbitProp) {
         return getAverageOrbitValue(this.data, orbitProp);
     }
+    this.displayNeoInfo = function(neo) {
+        return displayNeoInfo(neo);
+    } 
 }
 
 module.exports = NeoData

@@ -27,11 +27,33 @@ function main() {
     // Step 3 and 4
     // const neoData = parseData(data);
     // const classData = arrangeNeoByClass(neoData);
-    // exportDataToFile('NEOCLASSES_Dataset.txt', classData);
+    // exportDataToFile('NEOCLASSES_Dataset.json', classData);
 
-    const sortedData = JSON.parse(fs.readFileSync("NEOCLASSES_Dataset.txt", "utf8"));
-    const amor = new NeoData(sortedData['Amor']);
-    console.log(amor.getAverageOrbitValue('period_yr'));
+    const sortedDataByClass = JSON.parse(fs.readFileSync("NEOCLASSES_Dataset.json", "utf8"));
+
+    // Display information on all NEOs in the dataset (based all class);
+    // for (const key in sortedDataByClass) {
+    //   const neoClassArr = sortedDataByClass[key];
+    //   const neoDataObj = new NeoData(neoClassArr);
+    //   for (let i=0; i<neoClassArr.length; i++) {
+    //     neoDataObj.displayNeoInfo(neoClassArr[i]);
+    //   }
+    // }
+
+
+    // Display all NEOs that are a PHA and store them in array for analysis
+    const phaArr = [];
+    for (const key in sortedDataByClass) {
+      const neoClassArr = sortedDataByClass[key];
+      const neoDataObj = new NeoData(neoClassArr);
+      for (let i=0; i<neoClassArr.length; i++) {
+        // If the NEO class has any NEOs that are classified as PHA, display them in console
+        if (neoDataObj.getNeoByPha(true)) {
+          console.log(neoDataObj.getNeoByPha(true));
+          phaArr.push(...neoDataObj.getNeoByPha(true));
+        }
+      }
+    }
 }
 
 main();

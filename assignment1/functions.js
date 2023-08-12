@@ -1,3 +1,8 @@
+// Step 1
+function parseData(dataSet) {
+    return JSON.parse(dataSet);
+}
+
 // Step 2
 function getNeoByIndex(dataSet, index) {   
     return dataSet[index] ? dataSet[index] : null;
@@ -5,7 +10,7 @@ function getNeoByIndex(dataSet, index) {
 
 function getNeoByDesignation(dataSet, designation) {
     return dataSet.filter(neo => neo['designation'] === designation).length > 0 
-            ? dataSet.filter(neo => neo['designation'])
+            ? dataSet.filter(neo => neo['designation'] === designation)
             : null;
 }
 
@@ -85,6 +90,7 @@ function arrangeNeoByClass(dataSet) {
 }
 
 module.exports = {
+    parseData, parseData,
     getNeoByIndex: getNeoByIndex,
     getNeoByDesignation: getNeoByDesignation,
     getNeoByMagnitude: getNeoByMagnitude,

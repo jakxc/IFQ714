@@ -35,6 +35,9 @@ function NeoData(data) {
     this.displayNeoInfo = function(neo) {
         return displayNeoInfo(neo);
     } 
+    this.displayAllNeoInfo = function() {
+        console.table(this.data);
+    }
 }
 
 module.exports = NeoData

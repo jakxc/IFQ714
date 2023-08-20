@@ -21,20 +21,20 @@ function exportDataToFile(filename, dataSet) {
 
 function main() {
     // Step 3 and 4
-    // const neoData = parseData(data);
-    // const classData = arrangeNeoByClass(neoData);
-    // exportDataToFile('NEOCLASSES_Dataset.json', classData);
+    const neoData = parseData(data);
+    const classData = arrangeNeoByClass(neoData);
+    exportDataToFile('NEOCLASSES_Dataset.json', classData);
 
     const sortedDataByClass = JSON.parse(fs.readFileSync("NEOCLASSES_Dataset.json", "utf8"));
 
-    // Display information on all NEOs in the dataset (based all class);
-    // for (const key in sortedDataByClass) {
-    //   const neoClassArr = sortedDataByClass[key];
-    //   const neoDataObj = new NeoData(neoClassArr);
-    //   for (let i=0; i<neoClassArr.length; i++) {
-    //     neoDataObj.displayNeoInfo(neoClassArr[i]);
-    //   }
-    // }
+    // Display information on all NEOs in the dataset (based on class);
+    for (const key in sortedDataByClass) {
+      const neoClassArr = sortedDataByClass[key];
+      const neoDataObj = new NeoData(neoClassArr);
+      for (let i=0; i<neoClassArr.length; i++) {
+        neoDataObj.displayNeoInfo(neoClassArr[i]);
+      }
+    }
 
     // Display all NEOs that are a PHA and store them in array for analysis
     const phaArr = [];
@@ -135,19 +135,19 @@ function main() {
 
     console.table(newDataObj);
 
-    // // Determine minimum and maximum perihelion distance (q_au_1) of all Amors in dataset
-    // const amorArr = sortedDataByClass["Amor"];
-    // const amorDataObj = new NeoData(amorArr);
-    // const minQ1AmorArr = new NeoData(amorDataObj.getMinOrbitValue("q_au_1"));
-    // const maxQ1AmorArr = new NeoData(amorDataObj.getMaxOrbitValue("q_au_1"));
-    // minQ1AmorArr.displayAllNeoInfo(); 
-    // maxQ1AmorArr.displayAllNeoInfo(); 
+    // Determine minimum and maximum perihelion distance (q_au_1) of all Amors in dataset
+    const amorArr = sortedDataByClass["Amor"];
+    const amorDataObj = new NeoData(amorArr);
+    const minQ1AmorArr = new NeoData(amorDataObj.getMinOrbitValue("q_au_1"));
+    const maxQ1AmorArr = new NeoData(amorDataObj.getMaxOrbitValue("q_au_1"));
+    minQ1AmorArr.displayAllNeoInfo(); 
+    maxQ1AmorArr.displayAllNeoInfo(); 
 
-    // // Determine the maximum perihelion distance (q_au_1) of all Apollos in dataset
-    // const apolloArr = sortedDataByClass["Apollo"];
-    // const apolloDataObj = new NeoData(apolloArr);
-    // const maxQ1ApolloArr = new NeoData(apolloDataObj.getMaxOrbitValue("q_au_1"));
-    // maxQ1ApolloArr.displayAllNeoInfo();
+    // Determine the maximum perihelion distance (q_au_1) of all Apollos in dataset
+    const apolloArr = sortedDataByClass["Apollo"];
+    const apolloDataObj = new NeoData(apolloArr);
+    const maxQ1ApolloArr = new NeoData(apolloDataObj.getMaxOrbitValue("q_au_1"));
+    maxQ1ApolloArr.displayAllNeoInfo();
 }
 
 main();

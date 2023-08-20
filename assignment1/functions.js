@@ -61,17 +61,20 @@ function getAverageOrbitValue(dataSet, orbitProp) {
 
 function displayNeoInfo(neo) {    
     if (neo) {
+        // Display in table format
         console.table(neo);
-        // console.log(`Designation: ${neo.designation}
-        // Discovery date: ${neo.discovery_date}
-        // H_Mag: ${neo.h_mag}
-        // MOID(AU): ${neo.moid_au}
-        // Perihelion distance: ${neo.q_au_1}
-        // Aphelion distance: ${neo.q_au_2}
-        // Orbital period: ${neo.period_yr}
-        // Orbital inclination: ${neo.i_deg}
-        // PHA: ${neo.pha}
-        // Orbit class: ${neo.orbit_class}`);
+
+        // Display in string format
+        console.log(`Designation: ${neo.designation}
+        Discovery date: ${neo.discovery_date}
+        H_Mag: ${neo.h_mag}
+        MOID(AU): ${neo.moid_au}
+        Perihelion distance: ${neo.q_au_1}
+        Aphelion distance: ${neo.q_au_2}
+        Orbital period: ${neo.period_yr}
+        Orbital inclination: ${neo.i_deg}
+        PHA: ${neo.pha}
+        Orbit class: ${neo.orbit_class}`);
     } else {
         console.log(`${neo} cannot be found in the data set`); 
     }

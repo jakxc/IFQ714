@@ -6,17 +6,13 @@ const sales = data.sales;
 
 // Step 2
 function displayEmployees() {
-    for (let i=0; i<employees.length; i++) {
-        let employee = employees[i];
+    employees.forEach((employee, i) => {
         console.log(`id: ${employee.id}\nfirstName: ${employee.firstName} lastname: ${employee.lastName}\ngender: ${employee.gender}\nage: ${employee.age}\nposition: ${employee.position}`)
-    }
+    })
 }
 
 function displaySales() {
-    for (let i=0; i<sales.length; i++) {
-        let sale = sales[i];
-        console.log(`staffId: ${sale.staffId}\n item: ${sale.item}\nprice: ${sale.price}\ndate: ${sale.date}`)
-    }
+    sales.forEach((sale, i) => console.log(`staffId: ${sale.staffId}\n item: ${sale.item}\nprice: ${sale.price}\ndate: ${sale.date}`))
 }
 
 // displayEmployees();
@@ -49,15 +45,41 @@ function filterSalesByPrice(price) {
 
 // Bonus Task
 const salesByEmployees = employees.map(employee => {
-    let totalSales = sales.filter(sale => sale.staffId === employee.id).map(el => `${el.item}: $${el.price}`);
+    const cloneSales = Object.assign({}, sales);
+    let salesInfo = cloneSales.filter(sale => sale.staffId === employee.id).map(el => [el.item, el.price]);
+    const cloneEmployee = Object.assign({}, employee);
     return {
-        ...employee,
-        sales: totalSales,
+        ...clone,
+        sales: salesInfo,
         displaySales: function() {
-            if (totalSales.length === 0) return `${employee.firstName} ${employee.lastName} made no sales`;
-            return `${employee.firstName} ${employee.lastName} made ${totalSales.length} ${totalSales.length > 1 ? 'sales' : 'sale'}: ${totalSales}`;
+            if (salesInfo.length === 0) return `${cloneEmployee.firstName} ${cloneEmployee.lastName} made no sales`;
+            return `${cloneEmployee.firstName} ${cloneEmployee.lastName} made ${salesInfo.length} ${salesInfo.length > 1 ? 'sales' : 'sale'}: ${salesInfo}`;
         }
     }
 })
 
-console.log(salesByEmployees[0].displaySales());
+const setEmployeesCommission = () => {
+    return salesByEmployees.map(employee => {
+        const totalSales = employee.sales.reduce((acc, curr) => acc + curr[1], 0);
+        return {
+            ...employee,
+            commission: +(totalSales * 0.1).toFixed(2)
+        }
+    })
+}
+
+const commissionData = setEmployeesCommission();
+
+commissionData.forEach((el, i) => {
+    try {
+        if (el.sales.length) {
+            console.log(`${el.firstName} ${el.lastName} made $${el.commission} of commission`)
+        } else {
+            throw new Error(`${el.firstName} ${el.lastName} made no sales`);
+        }
+    } catch (err) {
+        console.log(err.message);
+    }
+})
+
+// console.log(salesByEmployees[0].displaySales());

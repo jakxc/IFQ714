@@ -5,6 +5,9 @@ const airportsData = fs.readFileSync("A2_Airports.json", "utf8");
 const flightsData = fs.readFileSync("A2_Flights.json", "utf8");
 const parseData = functions.parseData;
 const getAirportById = functions.getAirportById;
+const mapData = functions.mapData;
+
+const getAircrafts = functions.getAircrafts;
 
 function main() {
     const parsedAirportsData = parseData(airportsData);
@@ -29,7 +32,7 @@ function main() {
         })
     })
 
-    console.log(combinedData);
+    console.log(mapData(combinedData, getAircrafts));
 }
 
 main();

@@ -7,7 +7,13 @@ const parseData = functions.parseData;
 const getAirportById = functions.getAirportById;
 const mapData = functions.mapData;
 
-const getAircrafts = functions.getAircrafts;
+const displayAllFlights = functions.displayAllFlights;
+const filterByOriginCity = functions.filterByOriginCity;
+const filterByDestinationCity = functions.filterByDestinationCity;
+const filterByAircraft = functions.filterByAircraft;
+const sortByNumberOfAircrafts = functions.sortByNumberOfAircrafts;
+const mapDirectDistanceBetweenAirports = functions.mapDirectDistanceBetweenAirports;
+const mapPairOfAirports = functions.mapPairOfAirports;
 
 function main() {
     const parsedAirportsData = parseData(airportsData);
@@ -31,8 +37,8 @@ function main() {
             airline: airlineValues
         })
     })
-
-    console.log(mapData(combinedData, getAircrafts));
+    
+    console.table(mapDirectDistanceBetweenAirports(filterByAircraft(combinedData, 'Boeing 737')));
 }
 
 main();

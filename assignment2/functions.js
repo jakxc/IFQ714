@@ -24,27 +24,60 @@ function mapData(dataset, callback) {
         clonedData.push(el);
     })
 
-    return clonedData.map(el => callback(el));
+    return callback(clonedData);
 }
 
 // Step 3
-function getOriginCity(flight) {
-    return flight['source_airport']['city'];
+function displayAllFlights(dataset) {
+    return dataset.map(el => console.table(el))
 }
 
-function getDestinationCity(flight) {
-    return flight['destination_airport']['city'];
+function filterByOriginCity(dataset, city) {
+    return dataset.filter(el => el['source_airport']['city'] === city).length > 0 
+            ? dataset.filter(el => el['source_airport']['city'] === city)
+            : null;
 }
 
-function getAircrafts(flight) {
-    return flight['aircraft'];
+function filterByDestinationCity(dataset, city) {
+    return dataset.filter(el => el['destination_airport']['city'] === city).length > 0
+            ? dataset.filter(el => el['destination_airport']['city'] === city)
+            : null;
 }
 
-function getSourceDesinationAirport(flight) {
-    const source = flight['source_airport']['name'];
-    const dest = flight['destinaton_airport']['name'];
+function filterByAircraft(dataset, aircraft) {
+    return dataset.filter(el => el['aircraft'].includes(aircraft)).length > 0
+            ? dataset.filter(el => el['aircraft'].includes(aircraft))
+            : null;
+}
 
-    return [source, dest];
+
+// Ascending order
+function sortByNumberOfAircrafts(dataset) {
+    return dataset.sort((a,b) => a['aircraft'].length === b['aircraft'].length 
+                                    ? 0
+                                    : a['aircraft'].length > b['aircraft'].length ? 1 : -1       )
+}
+
+function mapPairOfAirports(dataset) {
+    return dataset.map(el => {
+        const airports = [el['source_airport']['name'],  el['destination_airport']['name']];
+        return {
+            ...el,
+            airportPair: airports
+        }
+    })
+}
+
+function mapDirectDistanceBetweenAirports(dataset) {
+    return dataset.map(el => {
+        const [originX, originY] = [el['source_airport']['latitude'], el['source_airport']['longitude']];
+        const [destX, destY] = [el['destination_airport']['latitude'], el['destination_airport']['longitude']];
+        const directDist = Math.sqrt((destX - originX)**2 + (destY - originY)**2);
+        return {
+            ...el,
+            direct_distance: directDist
+        }
+    })  
 }
 
 module.exports = {
@@ -54,8 +87,16 @@ module.exports = {
     mapData: mapData,
 
     // Analysis functions
-    getAircrafts: getAircrafts,
-    getSourceDesinationAirport: getSourceDesinationAirport
+    displayAllFlights: displayAllFlights,
+
+    filterByOriginCity: filterByOriginCity,
+    filterByDestinationCity: filterByDestinationCity,
+    filterByAircraft: filterByAircraft,
+
+    sortByNumberOfAircrafts: sortByNumberOfAircrafts,
+
+    mapDirectDistanceBetweenAirports: mapDirectDistanceBetweenAirports,
+    mapPairOfAirports: mapPairOfAirports
 }
 
 

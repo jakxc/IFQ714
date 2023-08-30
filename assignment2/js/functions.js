@@ -4,7 +4,7 @@ function parseData(dataSet) {
 }
 
 function getAirportById(dataset, id) {
-    const filteredData = dataset.filter((el) => el["id"] === id)
+    const filteredData = dataset.filter((el) => el["id"] === id);
     
     return filteredData.length > 0 
         ? filteredData[0] : null;
@@ -20,11 +20,15 @@ function getAirportByIata(dataset, iata) {
 // Step 2
 function mapData(dataset, callback) {
     const clonedData = [];
+    const timestamp = new Date();
     dataset.forEach(el => {
         clonedData.push(el);
     })
 
-    return callback(clonedData);
+    return {
+        timestamp: timestamp,
+        data: clonedData.map(callback)
+    };
 }
 
 // Step 3
@@ -50,7 +54,6 @@ function filterByAircraft(dataset, aircraft) {
             : null;
 }
 
-
 // Ascending order
 function sortByNumberOfAircrafts(dataset) {
     return dataset.sort((a,b) => a['aircraft'].length === b['aircraft'].length 
@@ -58,26 +61,23 @@ function sortByNumberOfAircrafts(dataset) {
                                     : a['aircraft'].length > b['aircraft'].length ? 1 : -1       )
 }
 
-function mapPairOfAirports(dataset) {
-    return dataset.map(el => {
-        const airports = [el['source_airport']['name'],  el['destination_airport']['name']];
+function mapPairOfAirports(flight) {
+    const airports = [flight['source_airport']['name'],  flight['destination_airport']['name']];
         return {
-            ...el,
+            ...flight,
             airportPair: airports
         }
-    })
 }
 
-function mapDirectDistanceBetweenAirports(dataset) {
-    return dataset.map(el => {
-        const [originX, originY] = [el['source_airport']['latitude'], el['source_airport']['longitude']];
-        const [destX, destY] = [el['destination_airport']['latitude'], el['destination_airport']['longitude']];
-        const directDist = Math.sqrt((destX - originX)**2 + (destY - originY)**2);
-        return {
-            ...el,
-            direct_distance: directDist
-        }
-    })  
+function mapDirectDistanceBetweenAirports(flight) {
+    const [originX, originY] = [flight['source_airport']['latitude'], flight['source_airport']['longitude']];
+    const [destX, destY] = [flight['destination_airport']['latitude'], flight['destination_airport']['longitude']];
+    const directDist = Math.sqrt((destX - originX)**2 + (destY - originY)**2);
+    
+    return {
+        ...el,
+        direct_distance: directDist
+    }
 }
 
 module.exports = {

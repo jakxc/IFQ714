@@ -32,8 +32,30 @@ function mapData(dataset, callback) {
 }
 
 // Step 3
+function displayFlight(flight) {
+    const cloneObj = {
+        ...flight,
+        source_airport: flight.source_airport.name,
+        destination_airport: flight.destination_airport.name,
+        airline: flight.airline.name
+    }
+
+    return console.table(cloneObj);
+}
+
 function displayAllFlights(dataset) {
-    return dataset.map(el => console.table(el))
+    const newData = dataset.map(flight => {
+        const clone = Object.assign({}, flight);
+
+        return {
+            ...flight,
+            source_airport: flight.source_airport.name,
+            destination_airport: flight.destination_airport.name,
+            airline: flight.airline.name
+        }
+    })
+
+    console.table(newData);
 }
 
 function filterByOriginCity(dataset, city) {
@@ -61,12 +83,28 @@ function sortByNumberOfAircrafts(dataset) {
                                     : a['aircraft'].length > b['aircraft'].length ? 1 : -1       )
 }
 
+function mapAirportNames(flight) {
+    return {
+        ...flight,
+        source_airport: flight.source_airport.name,
+        destination_airport: flight.destination_airport.name
+    }
+}
+
+function mapAirlineNames(flight) {
+    return {
+        ...flight,
+        arline: flight.airline.name
+    }
+}
+
 function mapPairOfAirports(flight) {
     const airports = [flight['source_airport']['name'],  flight['destination_airport']['name']];
-        return {
-            ...flight,
-            airportPair: airports
-        }
+    
+    return {
+        ...flight,
+        airportPair: airports
+    }
 }
 
 function mapDirectDistanceBetweenAirports(flight) {
@@ -87,8 +125,8 @@ module.exports = {
     mapData: mapData,
 
     // Analysis functions
+    displayFlight: displayFlight,
     displayAllFlights: displayAllFlights,
-
     filterByOriginCity: filterByOriginCity,
     filterByDestinationCity: filterByDestinationCity,
     filterByAircraft: filterByAircraft,
@@ -96,7 +134,9 @@ module.exports = {
     sortByNumberOfAircrafts: sortByNumberOfAircrafts,
 
     mapDirectDistanceBetweenAirports: mapDirectDistanceBetweenAirports,
-    mapPairOfAirports: mapPairOfAirports
+    mapPairOfAirports: mapPairOfAirports,
+    mapAirportNames: mapAirportNames,
+    mapAirlineNames: mapAirlineNames
 }
 
 

@@ -2,10 +2,13 @@
   "name": "assignment2",
   "version": "1.0.0",
   "description": "",
-  "main": ".js/script.mjs",
+  "main": "script.js",
+  "scripts": {
+    "test": "jest"
+  },
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "node-fetch": "^3.3.2"
+  "devDependencies": {
+    "jest": "^29.6.4"
   }
 }

@@ -4,20 +4,22 @@ function parseData(dataSet) {
 }
 
 function getAirportById(dataset, id) {
-    const filteredData = dataset.filter((el) => el["id"] === id);
+    const filteredData = dataset.filter(el => el["id"] === id);
     
     return filteredData.length > 0 
         ? filteredData[0] : null;
 }
 
 function getAirportByIata(dataset, iata) {
-    const filteredData = dataset.filter((el) => el["iata"] === iata)
+    const filteredData = dataset.filter(el => el["iata"] === iata);
     
     return filteredData.length > 0 
         ? filteredData[0] : null;
 }
 
 // Step 2
+
+// Mapping function
 function mapData(dataset, callback) {
     const clonedData = [];
     const timestamp = new Date();
@@ -59,42 +61,39 @@ function displayAllFlights(dataset) {
 }
 
 function filterByOriginCity(dataset, city) {
-    return dataset.filter(el => el['source_airport']['city'] === city).length > 0 
-            ? dataset.filter(el => el['source_airport']['city'] === city)
+    const validData = dataset.filter(el => el['source_airport']['city']);
+    return validData.filter(el => el['source_airport']['city'] === city).length > 0 
+            ? validData.filter(el => el['source_airport']['city'] === city)
             : null;
 }
 
 function filterByDestinationCity(dataset, city) {
-    return dataset.filter(el => el['destination_airport']['city'] === city).length > 0
-            ? dataset.filter(el => el['destination_airport']['city'] === city)
+    const validData = dataset.filter(el => el['destination_airport']['city']);
+    return validData.filter(el => el['destination_airport']['city'] === city).length > 0
+            ? validData.filter(el => el['destination_airport']['city'] === city)
             : null;
 }
 
 function filterByAircraft(dataset, aircraft) {
-    return dataset.filter(el => el['aircraft'].includes(aircraft)).length > 0
-            ? dataset.filter(el => el['aircraft'].includes(aircraft))
+    const validData = dataset.filter(el => el['aircraft']);
+    return validData.filter(el => el['aircraft'].includes(aircraft)).length > 0
+            ? validData.filter(el => el['aircraft'].includes(aircraft))
             : null;
 }
 
-// Ascending order
-function sortByNumberOfAircrafts(dataset) {
-    return dataset.sort((a,b) => a['aircraft'].length === b['aircraft'].length 
-                                    ? 0
-                                    : a['aircraft'].length > b['aircraft'].length ? 1 : -1       )
+function filterByAirline(dataset, airline) {
+    const validData = dataset.filter(el => el['airline'] && el['airline']['name']);
+    return validData.filter(el => el['airline']['name'] === airline).length > 0
+    ? validData.filter(el => el['airline']['name'] === airline)
+    : null;
 }
 
-function mapAirportNames(flight) {
-    return {
-        ...flight,
-        source_airport: flight.source_airport.name,
-        destination_airport: flight.destination_airport.name
-    }
-}
+function mapNumOfAircrafts(flight) {
+    const numOfAircrafts =  flight['aircraft'] ? flight['aircraft'].length : 0;
 
-function mapAirlineNames(flight) {
     return {
         ...flight,
-        arline: flight.airline.name
+        num_of_aircrafts: numOfAircrafts
     }
 }
 
@@ -103,14 +102,14 @@ function mapPairOfAirports(flight) {
     
     return {
         ...flight,
-        airportPair: airports
+        airport_pair: airports
     }
 }
 
 function mapDirectDistanceBetweenAirports(flight) {
-    const [originX, originY] = [flight['source_airport']['latitude'], flight['source_airport']['longitude']];
-    const [destX, destY] = [flight['destination_airport']['latitude'], flight['destination_airport']['longitude']];
-    const directDist = Math.sqrt((destX - originX)**2 + (destY - originY)**2);
+    const [originX, originY, originZ] = [flight['source_airport']['latitude'], flight['source_airport']['longitude'], flight['source_airport']['altitude']];
+    const [destX, destY, destZ] = [flight['destination_airport']['latitude'], flight['destination_airport']['longitude'],  flight['destination_airport']['altitude']];
+    const directDist = Math.sqrt((destX - originX)**2 + (destY - originY)**2 + (destZ - originZ)**2);
     
     return {
         ...el,
@@ -130,13 +129,11 @@ module.exports = {
     filterByOriginCity: filterByOriginCity,
     filterByDestinationCity: filterByDestinationCity,
     filterByAircraft: filterByAircraft,
+    filterByAirline: filterByAirline,
 
-    sortByNumberOfAircrafts: sortByNumberOfAircrafts,
-
+    mapNumOfAircrafts: mapNumOfAircrafts,
     mapDirectDistanceBetweenAirports: mapDirectDistanceBetweenAirports,
-    mapPairOfAirports: mapPairOfAirports,
-    mapAirportNames: mapAirportNames,
-    mapAirlineNames: mapAirlineNames
+    mapPairOfAirports: mapPairOfAirports
 }
 
 

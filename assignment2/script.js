@@ -9,8 +9,6 @@ const filterByOriginCity = functions.filterByOriginCity;
 const filterByDestinationCity = functions.filterByDestinationCity;
 const mapDirectDistanceBetweenAirports = functions.mapDirectDistanceBetweenAirports;
 const mapPairOfAirports = functions.mapPairOfAirports;
-const mapAirportNames = functions.mapAirportNames;
-const mapAirlineNames = functions.mapAirlineNames;
 
 function setFlightsData() {
     fetch('https://server.com/A2_Flights.json')

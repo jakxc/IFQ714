@@ -1,12 +1,14 @@
-const functions = require('./functions');
-const getAirportById = functions.getAirportById;
-const getAirportByIata = functions.getAirportByIata;
-const filterByOriginCity = functions.filterByOriginCity;
-const filterByDestinationCity = functions.filterByDestinationCity;
-const filterByAirline = functions.filterByAirline;
-const filterByAircraft = functions.filterByAircraft;
-const mapDirectDistanceBetweenAirports = functions.mapDirectDistanceBetweenAirports;
-const mapPairOfAirports = functions.mapPairOfAirports;
+import { 
+  getAirportById, 
+  getAirportByIata, 
+  filterByOriginCity, 
+  filterByDestinationCity, 
+  filterByOriginAirport,
+  filterByDestinationAirport,
+  filterByAirline, 
+  filterByAircraft, 
+  mapDirectDistanceBetweenAirports, 
+  mapPairOfAirports } from './functions';
 
 
 // getAirportById tests
@@ -61,7 +63,6 @@ describe('The filterByOriginCity() method', function () {
     {"source_airport":{"city":"Brisbane","country":"Australia"},"destination_airport":{"city":"Sydney","country":"Australia"}}
   ]
 
-// Test with an input of data and city will return flights with target origin city
   test ('Input of data and city, output should return elements with target origin city', () => {
     expect(filterByOriginCity(tempData, "Brisbane")).toEqual([ 
       {"source_airport":{"city":"Brisbane","country":"Australia"},"destination_airport":{"city":"Melbourne","country":"Australia"}},

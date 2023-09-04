@@ -1,12 +1,5 @@
-const fs = require('fs');
-const functions = require('./functions');
-const parseData = functions.parseData;
-const getAirportById = functions.getAirportById;
-const mapData = functions.mapData;
-const filterByOriginCity = functions.filterByOriginCity;
-const filterByDestinationCity = functions.filterByDestinationCity;
-const mapDirectDistanceBetweenAirports = functions.mapDirectDistanceBetweenAirports;
-const mapPairOfAirports = functions.mapPairOfAirports;
+import { writeFile, readFileSync } from 'fs';
+import { parseData, mapData, getAirportById, filterByOriginCity, filterByDestinationCity, mapPairOfAirports, mapDirectDistanceBetweenAirports } from './functions.js';
 
 function setFlightsData() {
     fetch('https://server.com/A2_Flights.json')
@@ -16,7 +9,7 @@ function setFlightsData() {
 
 function exportDataToFile(filename, dataSet) {
     const stringifiedData = JSON.stringify(dataSet);
-    fs.writeFile(filename, stringifiedData, (err) => {
+    writeFile(filename, stringifiedData, (err) => {
         if (err)
           console.log(err);
         else {
@@ -49,9 +42,9 @@ function main() {
     // })
 
     // exportDataToFile("Combined_Data.json", combinedData);
-    const combinedData = JSON.parse(fs.readFileSync("Combined_Data.json", "utf8"));
+    const combinedData = JSON.parse(readFileSync("Combined_Data.json", "utf8"));
     const brisbaneToRomaFlights = filterByOriginCity(filterByDestinationCity(combinedData, 'Roma'), 'Brisbane');
-    displayAllFlights(brisbaneToRomaFlights);
+    console.log(mapData(combinedData, mapDirectDistanceBetweenAirports)['timestamp']);
 }
 
 main();

@@ -1,4 +1,13 @@
-import { mapData, filterByOriginAirport, filterByDestinationAirport,  filterByAirline, filterByAircraft, mapDirectDistanceBetweenAirports } from './functions.js';
+import { 
+    mapData, 
+    filterByOriginAirport, 
+    filterByDestinationAirport,  
+    filterByAirline, 
+    filterByAircraft, 
+    mapDirectDistanceBetweenAirports, 
+    filterAirportsByCity,
+    filterAirportsByQuery
+ } from './functions.js';
 
 // Filters and search
 const sourceAirportFilter = document.querySelector("#filterSourceAirportSelect");
@@ -119,19 +128,11 @@ function filterAirports() {
     airportsData.forEach(flight => cloneData.push(flight));
 
     if (cityValue !== "any")  {
-        cloneData = cloneData.filter(el => el['city'] === cityValue);
+        cloneData = filterAirportsByCity(cloneData, cityValue);
     } 
 
     if (searchQuery) {
-        cloneData = cloneData.filter(el => {
-            for (const key in el) {
-                if (el[key] === searchQuery) {
-                    return true;
-                }
-            }
-
-            return false;
-        })
+        cloneData = filterAirportsByQuery(cloneData, searchQuery);
     }
 
     return cloneData;
@@ -142,11 +143,11 @@ async function setFlightsData() {
         const res = await fetch('./Combined_Data.json');
         let data = await res.json();
         flightsData = mapData(data, mapDirectDistanceBetweenAirports).data;
-        console.log(flightsData.length);
-        appendOptionsToDropdown(sourceAirportFilter, (el) => el['source_airport'] ? el['source_airport']['name'] : '', flightsData);
-        appendOptionsToDropdown(destinationAirportFilter, (el) => el['destination_airport'] ? el['destination_airport']['name'] : '', flightsData);
-        appendOptionsToDropdown(airlineFilter, (el) => el['airline'] ? el['airline']['name'] : '', flightsData);
-        appendOptionsToDropdown(aircraftFilter, (el) => el['aircraft'] ? el['aircraft'] : [], flightsData);
+        displayFlights(flightsData);
+        appendOptionsToDropdown(sourceAirportFilter, (el) => el['source_airport']['name'], flightsData);
+        appendOptionsToDropdown(destinationAirportFilter, (el) => el['destination_airport']['name'], flightsData);
+        appendOptionsToDropdown(airlineFilter, (el) => el['airline']['name'], flightsData);
+        appendOptionsToDropdown(aircraftFilter, (el) => el['aircraft'], flightsData);
     } catch (error) {
         console.log(error);
     }
@@ -157,6 +158,7 @@ async function setAirportsData() {
         const res = await fetch('./A2_Airports.json');
         let data = await res.json();
         airportsData = mapData(data, mapDirectDistanceBetweenAirports)['data'];
+        displayAirports(airportsData);
         appendOptionsToDropdown(cityFilter, (el) => el['city'] ? el['city'] : '', airportsData);
     } catch (error) {
         console.log(error);
@@ -165,7 +167,6 @@ async function setAirportsData() {
 
 setFlightsData();
 setAirportsData();
-
 
 sourceAirportFilter.addEventListener('change', (event) => {
     displayFlights(filterFlights());

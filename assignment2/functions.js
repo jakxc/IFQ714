@@ -138,7 +138,7 @@ export function mapNumOfAircrafts(flight) {
 }
 
 export function mapPairOfAirports(flight) {
-    const airports = [flight['source_airport']['iata'],  flight['destination_airport']['iata']];
+    const airports = [flight['source_airport']['name'],  flight['destination_airport']['name']];
     
     return {
         ...flight,

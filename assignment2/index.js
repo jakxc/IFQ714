@@ -6,7 +6,8 @@ import {
     filterByAircraft, 
     mapDirectDistanceBetweenAirports, 
     filterAirportsByCity,
-    filterAirportsByQuery
+    filterAirportsByQuery,
+    mapPairOfAirports
  } from './functions.js';
 
 // Filters and search
@@ -24,24 +25,55 @@ const airportsDisplayDiv = document.querySelector("#airportFilterDisplayDiv")
 let flightsData = [];
 let airportsData = [];
 
+function restructureData(dataset) {
+    const obj = {};
+
+    dataset.forEach(el => {
+        const key = el['pair_of_airports'].join('-')
+        if (!obj[key]) {
+            obj[key] = { 
+                airline: [el['airline']['name']],
+                aircrafts: [...el['aircraft']],
+                distance: el['direct_distance']
+             }
+        } else {
+            obj[key]['airline'].push(el['airline']['name']);
+            obj[key]['aircrafts'].push(...el['aircraft']);
+        }
+    })
+
+    return obj;
+}
+
 function displayFlights(dataset) {
     // Clear flights div content
     flightsDisplayDiv.innerHTML = '';
+    const dataObj = restructureData(dataset);
 
     if (!dataset || dataset.length === 0) {
         flightsDisplayDiv.innerHTML = "There are no flights that match this query, please try again.";
     } else { 
         let listElement = document.createElement('ol');
         flightsDisplayDiv.appendChild(listElement);
-        dataset.forEach(el => {
+
+        for (const key in dataObj) {
             listElement.innerHTML += `<li class='list-item'>
-                                        <span class='fw-bold'>Source Airport:</span> ${el['source_airport']['name'] || 'Not Specified'} (${el['source_airport']['id'] || 'Not Specified'}) | 
-                                        <span class='fw-bold'>Destination Airport:</span> ${el['destination_airport']['name'] || 'Not Specified'} (${el['destination_airport']['id'] || 'Not Specified'}) |
-                                        <span class='fw-bold'>Airline:</span> ${el['airline']['name'] || 'Not Specified'} |
-                                        <span class='fw-bold'>Aircraft/s:</span> ${el['aircraft'].join(', ') || 'Not Specified'} |
-                                        <span class='fw-bold'>Distance:</span> ${el['direct_distance'] ? el['direct_distance'].toFixed(2) + 'km' : 'Not Specified'} 
-                                    </li>`
-        })
+            <span class='fw-bold'>Source Airport:</span> ${key.split('-')[0] || 'Not Specified'} | 
+            <span class='fw-bold'>Destination Airport:</span> ${key.split('-')[1] || 'Not Specified'} |
+            <span class='fw-bold'>Airline(s):</span> ${dataObj[key]['airline'].join(', ') || 'Not Specified'} |
+            <span class='fw-bold'>Aircraft(s):</span> ${dataObj[key]['aircrafts'].join(', ') || 'Not Specified'} |
+            <span class='fw-bold'>Distance:</span> ${dataObj[key]['distance'].toFixed(2) + 'km' || 'Not Specified'} 
+            </li>`
+        }
+        // dataset.forEach(el => {
+        //     listElement.innerHTML += `<li class='list-item'>
+        //                                 <span class='fw-bold'>Source Airport:</span> ${el['source_airport']['name'] || 'Not Specified'} (${el['source_airport']['id'] || 'Not Specified'}) | 
+        //                                 <span class='fw-bold'>Destination Airport:</span> ${el['destination_airport']['name'] || 'Not Specified'} (${el['destination_airport']['id'] || 'Not Specified'}) |
+        //                                 <span class='fw-bold'>Airline:</span> ${el['airline']['name'] || 'Not Specified'} |
+        //                                 <span class='fw-bold'>Aircraft/s:</span> ${el['aircraft'].join(', ') || 'Not Specified'} |
+        //                                 <span class='fw-bold'>Distance:</span> ${el['direct_distance'] ? el['direct_distance'].toFixed(2) + 'km' : 'Not Specified'} 
+        //                             </li>`
+        // })
     }
 }
 
@@ -68,8 +100,6 @@ function displayAirports(dataset) {
         })
     }
 }
-
-
 
 function appendOptionsToDropdown(dropdown, callback, dataset) {
     const mappedData = dataset.map(callback); 
@@ -138,11 +168,13 @@ function filterAirports() {
     return cloneData;
 }
 
+
+
 async function setFlightsData() {
     try {
         const res = await fetch('./Combined_Data.json');
         let data = await res.json();
-        flightsData = mapData(data, mapDirectDistanceBetweenAirports).data;
+        flightsData = data.map(mapDirectDistanceBetweenAirports).map(mapPairOfAirports);
         displayFlights(flightsData);
         appendOptionsToDropdown(sourceAirportFilter, (el) => el['source_airport']['name'], flightsData);
         appendOptionsToDropdown(destinationAirportFilter, (el) => el['destination_airport']['name'], flightsData);

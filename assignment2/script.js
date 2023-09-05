@@ -1,12 +1,6 @@
 import { writeFile, readFileSync } from 'fs';
 import { parseData, mapData, getAirportById, filterByOriginCity, filterByDestinationCity, mapPairOfAirports, mapDirectDistanceBetweenAirports, displayAllFlights, filterByAircraft } from './functions.js';
 
-function setFlightsData() {
-    fetch('https://server.com/A2_Flights.json')
-        .then(res => res.json())
-        .then(data => console.log(data));
-}
-
 function exportDataToFile(filename, dataSet) {
     const stringifiedData = JSON.stringify(dataSet);
     writeFile(filename, stringifiedData, (err) => {
@@ -60,10 +54,10 @@ function main() {
     combinedDataWithAirports.forEach(el => {
       const pair = el['pair_of_airports'].sort();
 
-      if (!airportsObj[pair.join(' and ')]) {
-        airportsObj[pair.join(' and ')] = 1;
+      if (!airportsObj[pair.join('-')]) {
+        airportsObj[pair.join('-')] = 1;
       } else {
-        airportsObj[pair.join(' and ')]++;
+        airportsObj[pair.join('-')]++;
       }
     })
 

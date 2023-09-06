@@ -27,12 +27,15 @@ describe('The getAirportById() method', function () {
     });
   });
 
-  test ('Input of data and non-exisiting id, output should return null', () => {
-    expect(getAirportById(tempData, 987654321)).toBeNull();
+  test ('Input of data and non-exisiting id, output should return undefined', () => {
+    expect(getAirportById(tempData, 987654321)).toBeUndefined();
   });
 
-  test ('Input of data and invalid id, should throw TypeError', () => {
-    expect(() => getAirportById(tempData, 'invalid id')).toThrow(TypeError);
+  test ('Input of data and invalid id, should console log error message', () => {
+    const logSpy = jest.spyOn(global.console, 'log');
+
+    getAirportById(tempData, 'invalid ID')
+    expect(logSpy).toHaveBeenCalledWith('Invalid parameter type');
   });
 });
 
@@ -53,12 +56,15 @@ describe('The getAirportByIata() method', function () {
     });
   });
 
-  test ('Input of data and non-existing iata, output should return null', () => {
-    expect(getAirportByIata(tempData, "Really, really, really, really long string")).toBeNull();
+  test ('Input of data and non-existing iata, output should return undefined', () => {
+    expect(getAirportByIata(tempData, "Really, really, really, really long string")).toBeUndefined();
   });
 
-  test ('Input of data and invalid iata, should throw TypeError', () => {
-    expect(() => getAirportByIata(tempData, 12345)).toThrow(TypeError);
+  test ('Input of data and invalid iata, should console log error message', () => {
+    const logSpy = jest.spyOn(global.console, 'log');
+
+    getAirportByIata(tempData, 12345)
+    expect(logSpy).toHaveBeenCalledWith('Invalid parameter type');
   });
 });
 
@@ -81,12 +87,15 @@ describe('The filterByOriginCity() method', function () {
     expect(filterByOriginCity(tempData, "Brisbane")).toHaveLength(2);
   });
 
-  test ('Input of data and non-existing city, output should return null', () => {
-    expect(filterByOriginCity(tempData, "Invalid city")).toBeNull();
+  test ('Input of data and non-existing city, output should return undefined', () => {
+    expect(filterByOriginCity(tempData, "Invalid city")).toBeUndefined();
   });
 
-  test ('Input of data and invalid city, should throw TypeError', () => {
-    expect(() => filterByOriginCity(tempData, 987654)).toThrow(TypeError);
+  test ('Input of data and invalid city, should console log error message', () => {
+    const logSpy = jest.spyOn(global.console, 'log');
+
+    filterByOriginCity(tempData, 98765)
+    expect(logSpy).toHaveBeenCalledWith('Invalid parameter type');
   });
 });
 
@@ -108,12 +117,15 @@ describe('The filterByDestinationCity() method', function () {
     expect(filterByDestinationCity(tempData, "Melbourne")).toHaveLength(1);
   });
 
-  test ('Input of data and non-existing city, output should return null', () => {
-    expect(filterByDestinationCity(tempData, "Invalid city")).toBeNull();
+  test ('Input of data and non-existing city, output should return undefined', () => {
+    expect(filterByDestinationCity(tempData, "Invalid city")).toBeUndefined();
   });
 
-  test ('Input of data and invalid city, should throw TypeError', () => {
-    expect(() => filterByDestinationCity(tempData, 987654)).toThrow(TypeError);
+  test ('Input of data and invalid city, should console log error message', () => {
+    const logSpy = jest.spyOn(global.console, 'log');
+
+    filterByDestinationCity(tempData, 12345)
+    expect(logSpy).toHaveBeenCalledWith('Invalid parameter type');
   });
 });
 
@@ -139,12 +151,15 @@ describe('The filterByAirline() method', function () {
     expect(filterByAirline(tempData, "Airline3")).toHaveLength(1);
   });
 
-  test ('Input of data and non existing airline, output should return null', () => {
-    expect(filterByAirline(tempData, "Invalid airline")).toBeNull();
+  test ('Input of data and non existing airline, output should return undefined', () => {
+    expect(filterByAirline(tempData, "Invalid airline")).toBeUndefined();
   });
 
-  test ('Input of data and invalid airline, should throw TypeError', () => {
-    expect(() => filterByAirline(tempData, 123456)).toThrow(TypeError);
+  test ('Input of data and invalid airline, should console log error message', () => {
+    const logSpy = jest.spyOn(global.console, 'log');
+
+    filterByAirline(tempData, 12345)
+    expect(logSpy).toHaveBeenCalledWith('Invalid parameter type');
   });
 });
 
@@ -169,12 +184,15 @@ describe('The filterByAircraft() method', function () {
     expect(filterByAircraft(tempData, "A3")).toHaveLength(1);
   });
 
-  test ('Input of data and non-existing aircraft, output should return null', () => {
-    expect(filterByAircraft(tempData, "Invalid aircraft")).toBeNull();
+  test ('Input of data and non-existing aircraft, output should return undefined', () => {
+    expect(filterByAircraft(tempData, "Invalid aircraft")).toBeUndefined();
   });
 
-  test ('Input of data and invalid aircraft, should throw TypeError', () => {
-    expect(() => filterByAircraft(tempData, [1, 2, 3])).toThrow(TypeError);
+  test ('Input of data and invalid aircraft, should console log error message', () => {
+    const logSpy = jest.spyOn(global.console, 'log');
+
+    filterByAircraft(tempData, 123456)
+    expect(logSpy).toHaveBeenCalledWith('Invalid parameter type');
   });
 });
 

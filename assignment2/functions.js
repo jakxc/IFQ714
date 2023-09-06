@@ -4,32 +4,35 @@ export function parseData(dataSet) {
 }
 
 export function getAirportById(dataset, id) {
-    if (!Array.isArray(dataset) || typeof id !== 'number') throw new TypeError("Invalid parameter type");
+    if (!Array.isArray(dataset) || typeof id !== 'number') {
+        console.log('Invalid parameter type');
+        return;
+    }
     
-    const filteredData = dataset.filter(el => el["id"] === id);
+    const validData = dataset.filter(el => el["id"] && el["id"] === id);
     
-    return filteredData.length > 0 
-        ? filteredData[0] : null;
+    return validData.length > 0 
+        ? validData[0] : console.log('No airports were found matching this id');
 }
 
 export function getAirportByIata(dataset, iata) {
-    if (!Array.isArray(dataset) || typeof iata !== 'string') throw new TypeError("Invalid parameter type");
+    if (!Array.isArray(dataset) || typeof iata !== 'string') {
+        console.log('Invalid parameter type');
+        return;
+    }
     
-    const filteredData = dataset.filter(el => el["iata"] === iata);
+    const validData = dataset.filter(el => el["iata"] && el["iata"] === iata);
     
-    return filteredData.length > 0 
-        ? filteredData[0] : null;
+    return validData.length > 0 
+        ? validData[0] : console.log('No airports were found matching this iata');
 }
 
 // Step 2
 
 // Mapping function
 export function mapData(dataset, callback) {
-    const clonedData = [];
+    const clonedData = Array.from(dataset);
     const timestamp = new Date();
-    dataset.forEach(el => {
-        clonedData.push(el);
-    })
 
     return {
         timestamp: timestamp,
@@ -38,94 +41,73 @@ export function mapData(dataset, callback) {
 }
 
 // Step 3
-export function displayFlight(flight) {
-    if (!dataset)  {
-        console.log('No flight to display');
-        return;
-    }
-
-    const cloneObj = {
-        source_airport: flight['source_airport']['name'] || 'Not specifed',
-        destination_airport: flight['destination_airport.']['name'] || 'Not specifed',
-        airline: flight['airline']['name'] || 'Not specifed',
-        aircrafts: flight['aircraft'].join(', ') || 'Not specifed',
-        distance: `${flight['direct_distance'].toFixed(2)}km` || 'Not specifed'
-    }
-
-    return console.table(cloneObj);
-}
-
-export function displayAllFlights(dataset) {
-    if (!dataset) {
-        console.log('No flights to display');
-        return;
-    }
-
-    const newData = dataset.map(flight => {
-        return {
-            source_airport: flight['source_airport']['name'] || 'Not specifed',
-            destination_airport: flight['destination_airport']['name'] || 'Not specifed',
-            airline: flight['airline']['name'] || 'Not specifed',
-            aircrafts: flight['aircraft'].join(', ') || 'Not specifed',
-            distance: `${flight['direct_distance'].toFixed(2)}km` || 'Not specifed'
-        }
-    })
-
-    console.table(newData);
-}
-
 export function filterByOriginCity(dataset, city) {
-    if (!Array.isArray(dataset) || typeof city !== 'string') throw new TypeError("Invalid parameter type");
+    if (!Array.isArray(dataset) || typeof city !== 'string') {
+        console.log('Invalid parameter type');
+        return null;
+    }
 
-    const validData = dataset.filter(el => el['source_airport'] && el['source_airport']['city']);
-    return validData.filter(el => el['source_airport']['city'] === city).length > 0 
-            ? validData.filter(el => el['source_airport']['city'] === city)
-            : null;
+    const validData = dataset.filter(el => el['source_airport'] && el['source_airport']['city'] && el['source_airport']['city'] === city)
+
+    return validData.length > 0 
+            ? validData
+            : console.log('No flights were found matching this origin city');
 }
 
 export function filterByDestinationCity(dataset, city) {
-    if (!Array.isArray(dataset) || typeof city !== 'string') throw new TypeError("Invalid parameter type");
+    if (!Array.isArray(dataset) || typeof city !== 'string') {
+        console.log("Invalid parameter type");
+        return null;
+    }
 
-    const validData = dataset.filter(el => el['destination_airport'] && el['destination_airport']['city']);
-    return validData.filter(el => el['destination_airport']['city'] === city).length > 0
-            ? validData.filter(el => el['destination_airport']['city'] === city)
-            : null;
+    const validData = dataset.filter(el => el['destination_airport'] && el['destination_airport']['city'] && el['destination_airport']['city'] === city);
+
+    return validData.length > 0
+            ? validData
+            : console.log('No flights were found matching this destination city');
 }
 
 export function filterByOriginAirport(dataset, airport) {
-    if (!Array.isArray(dataset) || typeof airport !== 'string') throw new TypeError("Invalid parameter type");
+    if (!Array.isArray(dataset) || typeof airport !== 'string') {
+        console.log("Invalid parameter type");
+        return;
+    }
+    
+    const validData = dataset.filter(el => el['source_airport'] && el['source_airport']['name'] && el['source_airport']['name'] === airport)
 
-    const validData = dataset.filter(el => el['source_airport'] && el['source_airport']['name']);
-    return validData.filter(el => el['source_airport']['name'] === airport).length > 0 
-            ? validData.filter(el => el['source_airport']['name'] === airport)
-            : null;
+    return validData.length > 0 
+            ? validData
+            : console.log('No flights were found with this origin airport');
 }
 
 export function filterByDestinationAirport(dataset, airport) {
-    if (!Array.isArray(dataset) || typeof airport !== 'string') throw new TypeError("Invalid parameter type");
+    if (!Array.isArray(dataset) || typeof airport !== 'string') console.log("Invalid parameter type");
 
-    const validData = dataset.filter(el => el['destination_airport'] && el['destination_airport']['name']);
-    return validData.filter(el => el['destination_airport']['name'] === airport).length > 0
-            ? validData.filter(el => el['destination_airport']['name'] === airport)
-            : null;
+    const validData = dataset.filter(el => el['destination_airport'] && el['destination_airport']['name'] && el['destination_airport']['name'] === airport)
+    
+    return validData.length > 0
+            ? validData
+            : console.log('No flights were found with this destination airport');
 }
 
 export function filterByAircraft(dataset, aircraft) {
-    if (!Array.isArray(dataset) || typeof aircraft !== 'string') throw new TypeError("Invalid parameter type");
+    if (!Array.isArray(dataset) || typeof aircraft !== 'string') console.log("Invalid parameter type");
 
-    const validData = dataset.filter(el => el['aircraft'] && Array.isArray(el['aircraft']));
-    return validData.filter(el => el['aircraft'].includes(aircraft)).length > 0
-            ? validData.filter(el => el['aircraft'].includes(aircraft))
-            : null;
+    const validData = dataset.filter(el => el['aircraft'] && Array.isArray(el['aircraft']) && el['aircraft'].includes(aircraft));
+    
+    return validData.length > 0
+            ? validData
+            : console.log('No flights were found with this aircraft');
 }
 
 export function filterByAirline(dataset, airline) {
-    if (!Array.isArray(dataset) || typeof airline !== 'string') throw new TypeError("Invalid parameter type");
+    if (!Array.isArray(dataset) || typeof airline !== 'string') console.log("Invalid parameter type");
 
-    const validData = dataset.filter(el => el['airline'] && el['airline']['name']);
-    return validData.filter(el => el['airline']['name'] === airline).length > 0
-    ? validData.filter(el => el['airline']['name'] === airline)
-    : null;
+    const validData = dataset.filter(el => el['airline'] && el['airline']['name'] && el['airline']['name'] === airline)
+
+    return validData.length > 0
+    ? validData
+    : console.log('No flights were found with this airline');
 }
 
 export function mapNumOfAircrafts(flight) {
@@ -174,36 +156,60 @@ export function mapDirectDistanceBetweenAirports(flight) {
     }
 }
 
-export function filterAirportsByCity(dataset, city) {
-    if (!Array.isArray(dataset) || typeof city !== 'string') throw new TypeError("Invalid parameter type");
+export function displayFlight(flight) {
+    if (!dataset)  {
+        console.log('No flight to display');
+        return;
+    }
 
-    const validData = dataset.filter(el => el['city']);
+    const cloneObj = {
+        source_airport: flight['source_airport']['name'] || 'Not specifed',
+        destination_airport: flight['destination_airport.']['name'] || 'Not specifed',
+        airline: flight['airline']['name'] || 'Not specifed',
+        aircrafts: flight['aircraft'].join(', ') || 'Not specifed',
+        distance: `${flight['direct_distance'].toFixed(2)}km` || 'Not specifed'
+    }
 
-    return validData.filter(el => el['city'] === city).length > 0 
-            ? validData.filter(el => el['city'] === city)
-            : null;
+    return console.table(cloneObj);
 }
 
-export function filterAirportsByQuery(dataset, query) {
-    if (!Array.isArray(dataset)) throw new TypeError("Invalid parameter type");
+export function displayAllFlights(dataset) {
+    if (!dataset) {
+        console.log('No flights to display');
+        return;
+    }
 
-    return dataset.filter(el => {
-        for (const key in el) {
-            if (String(el[key]) === query) {
-                return true;
-            }
+    const newData = dataset.map(flight => {
+        return {
+            source_airport: flight['source_airport']['name'] || 'Not specifed',
+            destination_airport: flight['destination_airport']['name'] || 'Not specifed',
+            airline: flight['airline']['name'] || 'Not specifed',
+            aircrafts: flight['aircraft'].join(', ') || 'Not specifed',
+            distance: `${flight['direct_distance'].toFixed(2)}km` || 'Not specifed'
         }
+    })
 
-        return false;
-    }).length > 0 ? dataset.filter(el => {
-        for (const key in el) {
-            if (String(el[key]) === query) {
-                return true;
-            }
-        }
+    console.table(newData);
+}
 
-        return false;
-    }) : null;
+
+export function filterAirportsByCity(dataset, city) {
+    if (!Array.isArray(dataset) || typeof city !== 'string') console.log("Invalid parameter type");
+
+    const validData = dataset.filter(el => el['city'] && el['city'] === city);
+
+    return validData.length > 0 
+            ? validData
+            : console.log('No airports were found matching this city');
+}
+
+export function filterAirportsByName(dataset, query) {
+    if (!Array.isArray(dataset) || typeof query !== 'string') console.log("Invalid parameter type");
+
+    const validData = dataset.filter(el  => el['name'] && el['name'].toLowerCase().includes(query.toLowerCase()));
+    return validData.length > 0
+        ? validData
+        : console.log('No airports were found matching this city');
 }
 
 

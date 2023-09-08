@@ -81,7 +81,10 @@ export function filterByOriginAirport(dataset, airport) {
 }
 
 export function filterByDestinationAirport(dataset, airport) {
-    if (!Array.isArray(dataset) || typeof airport !== 'string') console.log("Invalid parameter type");
+    if (!Array.isArray(dataset) || typeof airport !== 'string') {
+        console.log("Invalid parameter type");
+        return;
+    }
 
     const validData = dataset.filter(el => el['destination_airport'] && el['destination_airport']['name'] && el['destination_airport']['name'] === airport)
     
@@ -91,7 +94,10 @@ export function filterByDestinationAirport(dataset, airport) {
 }
 
 export function filterByAircraft(dataset, aircraft) {
-    if (!Array.isArray(dataset) || typeof aircraft !== 'string') console.log("Invalid parameter type");
+    if (!Array.isArray(dataset) || typeof aircraft !== 'string') {
+        console.log("Invalid parameter type");
+        return;
+    }
 
     const validData = dataset.filter(el => el['aircraft'] && Array.isArray(el['aircraft']) && el['aircraft'].includes(aircraft));
     
@@ -101,7 +107,10 @@ export function filterByAircraft(dataset, aircraft) {
 }
 
 export function filterByAirline(dataset, airline) {
-    if (!Array.isArray(dataset) || typeof airline !== 'string') console.log("Invalid parameter type");
+    if (!Array.isArray(dataset) || typeof airline !== 'string') {
+        console.log("Invalid parameter type");
+        return;
+    }
 
     const validData = dataset.filter(el => el['airline'] && el['airline']['name'] && el['airline']['name'] === airline)
 
@@ -110,22 +119,13 @@ export function filterByAirline(dataset, airline) {
     : console.log('No flights were found with this airline');
 }
 
-export function mapNumOfAircrafts(flight) {
-    const numOfAircrafts =  flight['aircraft'] ? flight['aircraft'].length : 0;
-
-    return {
-        ...flight,
-        num_of_aircrafts: numOfAircrafts
-    }
-}
-
 export function mapPairOfAirports(flight) {
     const airports = [flight['source_airport']['name'],  flight['destination_airport']['name']];
     
-    return {
-        ...flight,
-        pair_of_airports: airports
-    }
+    const cloneFlight = Object.assign({}, flight);
+    cloneFlight['pair_of_airports'] = airports;
+    
+    return cloneFlight; 
 }
 
 export function mapDirectDistanceBetweenAirports(flight) {
@@ -149,11 +149,11 @@ export function mapDirectDistanceBetweenAirports(flight) {
     const [originX, originY] = [flight['source_airport'] ? flight['source_airport']['latitude'] : null, flight['source_airport'] ? flight['source_airport']['longitude'] : null];
     const [destX, destY] = [flight['destination_airport'] ? flight['destination_airport']['latitude'] : null, flight['destination_airport'] ? flight['destination_airport']['longitude'] : null];
     const directDist = haversineDistanceBetweenPoints(originX, originY, destX, destY);
+
+    const cloneFlight = Object.assign({}, flight)
+    cloneFlight['direct_distance'] = directDist;
     
-    return {
-        ...flight,
-        direct_distance: directDist
-    }
+    return cloneFlight;
 }
 
 export function displayFlight(flight) {

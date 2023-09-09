@@ -50,35 +50,54 @@ function main() {
 
     // Determine min, max and average values for number of flights between airport pairs
     const airportsObj = {};
+    const aircraftsObj = {};
 
     combinedDataWithAirports.forEach(el => {
-      const pair = el['pair_of_airports'].sort();
+      const unsortedKeys = el['pair_of_airports'];
+      const sortedKeys = el['pair_of_airports'].sort();
 
-      if (!airportsObj[pair.join('-')]) {
-        airportsObj[pair.join('-')] = 1;
+      if (!airportsObj[sortedKeys.join('-')]) {
+        airportsObj[sortedKeys.join('-')] = 1;
       } else {
-        airportsObj[pair.join('-')]++;
+        airportsObj[sortedKeys.join('-')]++;
+      }
+
+      const aircrafts = [...new Set(el['aircraft'])];
+      if (!aircraftsObj[unsortedKeys.join('-')]) {
+        aircraftsObj[unsortedKeys.join('-')] = aircrafts;
+      } else {
+        aircraftsObj[unsortedKeys.join('-')].push(...aircrafts);
+        aircraftsObj[unsortedKeys.join('-')] = [...new Set (aircraftsObj[unsortedKeys.join('-')])]
       }
     })
 
-    const minPair = Math.min(...Object.values(airportsObj)); 
-    const maxPair = Math.max(...Object.values(airportsObj));
-    const avgPair = Math.floor(Object.values(airportsObj).reduce((acc, curr) => acc + curr, 0) / Object.values(airportsObj).length);
-    const minArr = [];
-    const maxArr = [];
-    const avgArr = [];
-
-    for (const key in airportsObj) {
-      if (airportsObj[key] === minPair) minArr.push(key);
-      if (airportsObj[key] === maxPair) maxArr.push(key);
-      if (airportsObj[key] === avgPair) avgArr.push(key);
+    for (const key in aircraftsObj) {
+      aircraftsObj[key] = aircraftsObj[key].length || 0;
     }
 
-    console.table({
-      min: { value: minPair, airport_pairs: minArr.join(', ')},
-      max: { value: maxPair, airport_pairs: maxArr.join(', ')},
-      avg: { value: avgPair, airport_pairs: avgArr.join(', ')},
-    })
+    function analyseData(obj) {
+      const minPair = Math.min(...Object.values(obj)); 
+      const maxPair = Math.max(...Object.values(obj));
+      const avgPair = Math.floor(Object.values(obj).reduce((acc, curr) => acc + curr, 0) / Object.values(obj).length);
+      const minArr = [];
+      const maxArr = [];
+      const avgArr = [];
+  
+      for (const key in obj) {
+        if (obj[key] === minPair) minArr.push(key);
+        if (obj[key] === maxPair) maxArr.push(key);
+        if (obj[key] === avgPair) avgArr.push(key);
+      }
+  
+      console.table({
+        // min: { value: minPair, airport_pairs: minArr.join(', ')},
+        max: { value: maxPair, airport_pairs: maxArr.join(', ')},
+        // avg: { value: avgPair, airport_pairs: avgArr.join(', ')},
+      })
+    }
+
+    analyseData(airportsObj);
+    analyseData(aircraftsObj);
 }
 
 main();

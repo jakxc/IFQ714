@@ -51,13 +51,16 @@ function displayFlights(dataset) {
     if (!dataset || dataset.length === 0) {
         flightsDisplayDiv.innerHTML = "There are no flights that match this query, please try again.";
     } else { 
+        let i=0;
         for (const key in dataObj) {
+            i++;
             let airlineWithAircrafts = []
             for (const k in dataObj[key]['airline_aircraft']) {
                 airlineWithAircrafts.push(`${k} (<span class='fs-italic'>${dataObj[key]['airline_aircraft'][k].join(', ')}</span>)`)
             }
 
             flightsDisplayDiv.innerHTML += `<div class='list-item'>
+            ${i}: 
             <span class='fw-bold'>Source Airport:</span> ${key.split('-')[0] || 'Not Specified'} | 
             <span class='fw-bold'>Destination Airport:</span> ${key.split('-')[1] || 'Not Specified'} |
             <span class='fw-bold'>Airline(s):</span> ${airlineWithAircrafts.join(', ') || 'Not Specified'} |
@@ -83,8 +86,9 @@ function displayAirports(dataset) {
     if (!dataset || dataset.length === 0) {
         airportsDisplayDiv.innerHTML = "There are no airports that match this query, please try again.";
     } else { 
-        dataset.forEach(el => {
+        dataset.forEach((el, i) => {
             airportsDisplayDiv.innerHTML += `<div class='list-item'>
+                                        ${i + 1}: 
                                         <span class='fw-bold'>ID:</span> ${el['id'] || 'Not Specified'} | 
                                         <span class='fw-bold'>Name:</span> ${el['name'] || 'Not Specified'} |
                                         <span class='fw-bold'>City:</span> ${el['city'] || 'Not Specified'} |

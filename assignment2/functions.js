@@ -120,7 +120,7 @@ export function filterByAirline(dataset, airline) {
 }
 
 export function mapPairOfAirports(flight) {
-    const airports = [flight['source_airport']['name'],  flight['destination_airport']['name']];
+    const airports = [flight['source_airport']['iata'],  flight['destination_airport']['iata']];
     
     const cloneFlight = Object.assign({}, flight);
     cloneFlight['pair_of_airports'] = airports;

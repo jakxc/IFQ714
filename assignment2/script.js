@@ -38,7 +38,7 @@ function main() {
     // exportDataToFile("Combined_Data.json", combinedData);
     const combinedData = JSON.parse(readFileSync("Combined_Data.json", "utf8"));
     const combinedDataWithDistance = mapData(combinedData, mapDirectDistanceBetweenAirports).data;
-    const combinedDataWithAirports = mapData(combinedData, mapPairOfAirports).data;
+    const combinedDataWithAirports = mapData(combinedDataWithDistance, mapPairOfAirports).data;
 
     // Flights from Brisbane to Roma
     const brisbaneToRomaFlights = filterByOriginCity(filterByDestinationCity(combinedDataWithDistance, 'Roma'), 'Brisbane');
@@ -48,9 +48,11 @@ function main() {
     const airbusFlights = filterByAircraft(combinedDataWithDistance, 'Airbus A330');
     displayAllFlights(airbusFlights);
 
-    // Determine min, max and average values for number of flights between airport pairs
+    // Determine min, max and average values for number of flights between airport pairs,
+    // number of unique aircrafts each flight and direct distance of flights
     const airportsObj = {};
     const aircraftsObj = {};
+    const distanceObj= {};
 
     combinedDataWithAirports.forEach(el => {
       const unsortedKeys = el['pair_of_airports'];
@@ -69,6 +71,10 @@ function main() {
         aircraftsObj[unsortedKeys.join('-')].push(...aircrafts);
         aircraftsObj[unsortedKeys.join('-')] = [...new Set (aircraftsObj[unsortedKeys.join('-')])]
       }
+
+      if (!distanceObj[sortedKeys.join('-')]) {
+        if (typeof el['direct_distance'] === 'number') distanceObj[sortedKeys.join('-')] = el['direct_distance'];
+      }
     })
 
     for (const key in aircraftsObj) {
@@ -78,7 +84,7 @@ function main() {
     function analyseData(obj) {
       const minPair = Math.min(...Object.values(obj)); 
       const maxPair = Math.max(...Object.values(obj));
-      const avgPair = Math.floor(Object.values(obj).reduce((acc, curr) => acc + curr, 0) / Object.values(obj).length);
+      const avgPair = Object.values(obj).reduce((acc, curr) => acc + curr, 0) / Object.values(obj).length;
       const minArr = [];
       const maxArr = [];
       const avgArr = [];
@@ -90,14 +96,15 @@ function main() {
       }
   
       console.table({
-        // min: { value: minPair, airport_pairs: minArr.join(', ')},
+        min: { value: minPair, airport_pairs: minArr.join(', ')},
         max: { value: maxPair, airport_pairs: maxArr.join(', ')},
-        // avg: { value: avgPair, airport_pairs: avgArr.join(', ')},
+        avg: { value: avgPair, airport_pairs: avgArr.join(', ')},
       })
     }
 
     analyseData(airportsObj);
     analyseData(aircraftsObj);
+    analyseData(distanceObj)
 }
 
 main();

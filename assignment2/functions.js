@@ -130,7 +130,7 @@ export function mapPairOfAirports(flight) {
 
 export function mapDirectDistanceBetweenAirports(flight) {
     const haversineDistanceBetweenPoints = (lat1, lon1, lat2, lon2) => {
-        if (lat1 === null || lon1 === null || lat2 === null || lon2 === null) return null;
+        if ([lat1, lon1, lat2, lon2].some(el => typeof el !== 'number')) return null;
         let latDiff = (lat2 - lat1) * Math.PI / 180.0;
         let lonDiff = (lon2 - lon1) * Math.PI / 180.0;
            
@@ -167,7 +167,7 @@ export function displayFlight(flight) {
         destination_airport: flight['destination_airport.']['name'] || 'Not specifed',
         airline: flight['airline']['name'] || 'Not specifed',
         aircrafts: flight['aircraft'].join(', ') || 'Not specifed',
-        distance: `${flight['direct_distance'].toFixed(2)}km` || 'Not specifed'
+        distance: flight['direct_distance'] ? `${flight['direct_distance'].toFixed(2)} km` : 'Not specifed'
     }
 
     return console.table(cloneObj);
@@ -185,7 +185,7 @@ export function displayAllFlights(dataset) {
             destination_airport: flight['destination_airport']['name'] || 'Not specifed',
             airline: flight['airline']['name'] || 'Not specifed',
             aircrafts: flight['aircraft'].join(', ') || 'Not specifed',
-            distance: `${flight['direct_distance'].toFixed(2)}km` || 'Not specifed'
+            distance: flight['direct_distance'] ? `${flight['direct_distance'].toFixed(2)} km` : 'Not specifed'
         }
     })
 

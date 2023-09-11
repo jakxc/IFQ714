@@ -60,22 +60,13 @@ function displayFlights(dataset) {
             }
 
             flightsDisplayDiv.innerHTML += `<div class='list-item'>
-            ${i}: 
+            ${i}.
             <span class='fw-bold'>Source Airport:</span> ${key.split('-')[0] || 'Not Specified'} | 
             <span class='fw-bold'>Destination Airport:</span> ${key.split('-')[1] || 'Not Specified'} |
             <span class='fw-bold'>Airline(s):</span> ${airlineWithAircrafts.join(', ') || 'Not Specified'} |
             <span class='fw-bold'>Distance:</span> ${dataObj[key]['distance'].toFixed(2) + 'km' || 'Not Specified'} 
             </div>`
         }
-        // dataset.forEach(el => {
-        //     listElement.innerHTML += `<li class='list-item'>
-        //                                 <span class='fw-bold'>Source Airport:</span> ${el['source_airport']['name'] || 'Not Specified'} (${el['source_airport']['id'] || 'Not Specified'}) | 
-        //                                 <span class='fw-bold'>Destination Airport:</span> ${el['destination_airport']['name'] || 'Not Specified'} (${el['destination_airport']['id'] || 'Not Specified'}) |
-        //                                 <span class='fw-bold'>Airline:</span> ${el['airline']['name'] || 'Not Specified'} |
-        //                                 <span class='fw-bold'>Aircraft/s:</span> ${el['aircraft'].join(', ') || 'Not Specified'} |
-        //                                 <span class='fw-bold'>Distance:</span> ${el['direct_distance'] ? el['direct_distance'].toFixed(2) + 'km' : 'Not Specified'} 
-        //                             </li>`
-        // })
     }
 }
 
@@ -88,7 +79,7 @@ function displayAirports(dataset) {
     } else { 
         dataset.forEach((el, i) => {
             airportsDisplayDiv.innerHTML += `<div class='list-item'>
-                                        ${i + 1}: 
+                                        ${i + 1}. 
                                         <span class='fw-bold'>ID:</span> ${el['id'] || 'Not Specified'} | 
                                         <span class='fw-bold'>Name:</span> ${el['name'] || 'Not Specified'} |
                                         <span class='fw-bold'>City:</span> ${el['city'] || 'Not Specified'} |
@@ -167,8 +158,6 @@ function filterAirports() {
 
     return cloneData;
 }
-
-
 
 async function setFlightsData() {
     try {

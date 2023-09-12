@@ -52,8 +52,6 @@ function main() {
     // number of unique aircrafts each flight and direct distance of flights
     const airportsObj = {};
     const aircraftsObj = {};
-    const distanceObj= {};
-
     combinedDataWithAirports.forEach(el => {
       const unsortedKeys = el['pair_of_airports'];
       const sortedKeys = el['pair_of_airports'].sort();
@@ -72,9 +70,9 @@ function main() {
         aircraftsObj[unsortedKeys.join('-')] = [...new Set (aircraftsObj[unsortedKeys.join('-')])]
       }
 
-      if (!distanceObj[sortedKeys.join('-')]) {
-        if (typeof el['direct_distance'] === 'number') distanceObj[sortedKeys.join('-')] = el['direct_distance'];
-      }
+      // if (!distanceObj[unsortedKeys.join('-')]) {
+      //   distanceObj[unsortedKeys.join('-')] = el['direct_distance'];
+      // }
     })
 
     for (const key in aircraftsObj) {
@@ -85,6 +83,7 @@ function main() {
       const minPair = Math.min(...Object.values(obj)); 
       const maxPair = Math.max(...Object.values(obj));
       const avgPair = Object.values(obj).reduce((acc, curr) => acc + curr, 0) / Object.values(obj).length;
+      console.log('total length:' + Object.values(obj).length);
       const minArr = [];
       const maxArr = [];
       const avgArr = [];
@@ -104,7 +103,20 @@ function main() {
 
     analyseData(airportsObj);
     analyseData(aircraftsObj);
-    analyseData(distanceObj)
+
+    const sortedByDistance = combinedDataWithAirports.sort((a,b) => a['direct_distance'] === b['direct_distance'] 
+                                        ? 0 : a['direct_distance'] > b['direct_distance']
+                                        ? 1 : -1);
+    const maxDist = { from: sortedByDistance[sortedByDistance.length - 1]['source_airport']['iata'], 
+                      to: sortedByDistance[sortedByDistance.length - 1]['destination_airport']['iata'],
+                      distance: sortedByDistance[sortedByDistance.length - 1]['direct_distance']
+                    }
+    const minDist = { from: sortedByDistance[0]['source_airport']['iata'], 
+                      to: sortedByDistance[0]['destination_airport']['iata'],
+                      distance: sortedByDistance[0]['direct_distance']
+                   }
+    const avgDist = { distance: combinedDataWithAirports.reduce((acc, curr) => acc + curr['direct_distance'], 0) / combinedDataWithAirports.length } ;
+    console.table({max: maxDist, min: minDist, avg: avgDist});
 }
 
 main();

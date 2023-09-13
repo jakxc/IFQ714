@@ -3,6 +3,43 @@ export function parseData(dataSet) {
     return JSON.parse(dataSet);
 }
 
+export function displayFlight(flight) {
+    if (!dataset)  {
+        console.log('No flight to display');
+        return;
+    }
+
+    const cloneObj = {
+        source_airport: flight['source_airport']['name'] || 'Not specifed',
+        destination_airport: flight['destination_airport.']['name'] || 'Not specifed',
+        airline: flight['airline']['name'] || 'Not specifed',
+        aircrafts: flight['aircraft'].join(', ') || 'Not specifed',
+        distance: flight['direct_distance'] ? `${flight['direct_distance'].toFixed(2)} km` : 'Not specifed'
+    }
+
+    return console.table(cloneObj);
+}
+
+export function displayAllFlights(dataset) {
+    if (!dataset) {
+        console.log('No flights to display');
+        return;
+    }
+
+    const newData = dataset.map(flight => {
+        return {
+            source_airport: flight['source_airport']['name'] || 'Not specifed',
+            destination_airport: flight['destination_airport']['name'] || 'Not specifed',
+            airline: flight['airline']['name'] || 'Not specifed',
+            aircrafts: flight['aircraft'].join(', ') || 'Not specifed',
+            distance: flight['direct_distance'] ? `${flight['direct_distance'].toFixed(2)} km` : 'Not specifed'
+        }
+    })
+
+    console.table(newData);
+}
+
+
 /**
  * Returns array of elements with matching iata property
  *
@@ -176,6 +213,28 @@ export function filterByAirline(dataset, airline) {
     : console.log('No flights were found with this airline');
 }
 
+export function sortByDistance(dataset) {
+    if (!Array.isArray(dataset)) {
+        console.log("Invalid parameter type");
+        return;
+    }
+
+    return dataset.sort((a,b) => a['direct_distance'] === b['direct_distance'] 
+                                        ? 0 : a['direct_distance'] > b['direct_distance']
+                                        ? 1 : -1);
+}
+
+export function sortByNumberOfAircrafts(dataset) {
+    if (!Array.isArray(dataset)) {
+        console.log("Invalid parameter type");
+        return;
+    }
+
+    return dataset.sort((a,b) => a['aircraft'].length === b['aircraft'].length 
+    ? 0 : a['aircraft'].length > b['aircraft'].length
+    ? 1 : -1);
+}
+
 /**
  * Returns element with additional pair of airports property
  *
@@ -199,7 +258,10 @@ export function mapPairOfAirports(flight) {
  */
 export function mapDirectDistanceBetweenAirports(flight) {
     const haversineDistanceBetweenPoints = (lat1, lon1, lat2, lon2) => {
-        if ([lat1, lon1, lat2, lon2].some(el => typeof el !== 'number')) return null;
+        if ([lat1, lon1, lat2, lon2].some(el => typeof el !== 'number')) {
+            console.log("Invalid parameter type");
+            return;
+        }
         let latDiff = (lat2 - lat1) * Math.PI / 180.0;
         let lonDiff = (lon2 - lon1) * Math.PI / 180.0;
            
@@ -223,42 +285,6 @@ export function mapDirectDistanceBetweenAirports(flight) {
     cloneFlight['direct_distance'] = directDist;
     
     return cloneFlight;
-}
-
-export function displayFlight(flight) {
-    if (!dataset)  {
-        console.log('No flight to display');
-        return;
-    }
-
-    const cloneObj = {
-        source_airport: flight['source_airport']['name'] || 'Not specifed',
-        destination_airport: flight['destination_airport.']['name'] || 'Not specifed',
-        airline: flight['airline']['name'] || 'Not specifed',
-        aircrafts: flight['aircraft'].join(', ') || 'Not specifed',
-        distance: flight['direct_distance'] ? `${flight['direct_distance'].toFixed(2)} km` : 'Not specifed'
-    }
-
-    return console.table(cloneObj);
-}
-
-export function displayAllFlights(dataset) {
-    if (!dataset) {
-        console.log('No flights to display');
-        return;
-    }
-
-    const newData = dataset.map(flight => {
-        return {
-            source_airport: flight['source_airport']['name'] || 'Not specifed',
-            destination_airport: flight['destination_airport']['name'] || 'Not specifed',
-            airline: flight['airline']['name'] || 'Not specifed',
-            aircrafts: flight['aircraft'].join(', ') || 'Not specifed',
-            distance: flight['direct_distance'] ? `${flight['direct_distance'].toFixed(2)} km` : 'Not specifed'
-        }
-    })
-
-    console.table(newData);
 }
 
 /**

@@ -3,11 +3,11 @@ import {
   getAirportByIata, 
   filterByOriginCity, 
   filterByDestinationCity, 
-  filterByOriginAirport,
-  filterByDestinationAirport,
   filterByAirline, 
-  filterByAircraft 
-} from './functions';
+  filterByAircraft,
+  sortByDistance,
+  sortByNumberOfAircrafts
+} from '../js/functions';
 
 
 // getAirportById tests
@@ -195,4 +195,35 @@ describe('The filterByAircraft() method', function () {
     expect(logSpy).toHaveBeenCalledWith('Invalid parameter type');
   });
 });
+
+//sortByDistance tests
+describe('The sortByDistance() method', function () {
+  const tempData = [
+    {"direct_distance": 6}, 
+    {"direct_distance": 1},
+    {"direct_distance": 5},
+    {"no_property": null}
+  ]
+
+  test ('Input of data, output should return elements in ascending order base on direct_distance value', () => {
+    expect(sortByDistance(tempData)).toEqual([
+      {"no_property": null},
+      {"direct_distance": 1}, 
+      {"direct_distance": 5},
+      {"direct_distance": 6},
+    ]);
+  });
+
+  test ('Input of data, output should return array of same length', () => {
+    expect(sortByDistance(tempData)).toHaveLength(4);
+  });
+
+  test ('Input of invalid data, should console log error message', () => {
+    const logSpy = jest.spyOn(global.console, 'log');
+
+    sortByDistance('invalid data')
+    expect(logSpy).toHaveBeenCalledWith('Invalid parameter type');
+  });
+});
+
 

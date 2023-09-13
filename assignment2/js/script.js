@@ -1,5 +1,15 @@
 import { writeFile, readFileSync } from 'fs';
-import { parseData, mapData, getAirportById, filterByOriginCity, filterByDestinationCity, mapPairOfAirports, mapDirectDistanceBetweenAirports, displayAllFlights, filterByAircraft } from './functions.js';
+import { 
+    parseData, 
+    mapData, 
+    getAirportById, 
+    filterByOriginCity, 
+    filterByDestinationCity, 
+    filterByAircraft, sortByDistance, 
+    sortByNumberOfAircrafts, mapPairOfAirports, 
+    mapDirectDistanceBetweenAirports, 
+    displayAllFlights
+  } from './functions.js';
 
 function exportDataToFile(filename, dataSet) {
     const stringifiedData = JSON.stringify(dataSet);
@@ -69,21 +79,16 @@ function main() {
         aircraftsObj[unsortedKeys.join('-')].push(...aircrafts);
         aircraftsObj[unsortedKeys.join('-')] = [...new Set (aircraftsObj[unsortedKeys.join('-')])]
       }
-
-      // if (!distanceObj[unsortedKeys.join('-')]) {
-      //   distanceObj[unsortedKeys.join('-')] = el['direct_distance'];
-      // }
     })
 
     for (const key in aircraftsObj) {
       aircraftsObj[key] = aircraftsObj[key].length || 0;
     }
 
-    function analyseData(obj) {
+    function getMaxFromObj(obj) {
       const minPair = Math.min(...Object.values(obj)); 
       const maxPair = Math.max(...Object.values(obj));
       const avgPair = Object.values(obj).reduce((acc, curr) => acc + curr, 0) / Object.values(obj).length;
-      console.log('total length:' + Object.values(obj).length);
       const minArr = [];
       const maxArr = [];
       const avgArr = [];
@@ -94,29 +99,37 @@ function main() {
         if (obj[key] === avgPair) avgArr.push(key);
       }
   
-      console.table({
-        min: { value: minPair, airport_pairs: minArr.join(', ')},
-        max: { value: maxPair, airport_pairs: maxArr.join(', ')},
-        avg: { value: avgPair, airport_pairs: avgArr.join(', ')},
-      })
+   
+        // min: { value: minPair, airport_pairs: minArr.join(', ')},
+        return { value: maxPair, airport_pairs: maxArr.join(', ') }
+        // avg: { value: avgPair, airport_pairs: avgArr.join(', ')},)
     }
 
-    analyseData(airportsObj);
-    analyseData(aircraftsObj);
+    console.table({max: {num_of_flights: `${getMaxFromObj(airportsObj)['value']} (${getMaxFromObj(airportsObj)['airport_pairs']})` , 
+                        num_of_aircrafts: `${getMaxFromObj(aircraftsObj)['value']} (${getMaxFromObj(aircraftsObj)['airport_pairs']})`
+                    }})
 
-    const sortedByDistance = combinedDataWithAirports.sort((a,b) => a['direct_distance'] === b['direct_distance'] 
-                                        ? 0 : a['direct_distance'] > b['direct_distance']
-                                        ? 1 : -1);
-    const maxDist = { from: sortedByDistance[sortedByDistance.length - 1]['source_airport']['iata'], 
-                      to: sortedByDistance[sortedByDistance.length - 1]['destination_airport']['iata'],
+    const sortedByDistance = sortByDistance(combinedDataWithAirports);
+
+    const maxDist = { from: sortedByDistance[sortedByDistance.length - 1]['source_airport']['name'], 
+                      to: sortedByDistance[sortedByDistance.length - 1]['destination_airport']['name'],
                       distance: sortedByDistance[sortedByDistance.length - 1]['direct_distance']
                     }
-    const minDist = { from: sortedByDistance[0]['source_airport']['iata'], 
-                      to: sortedByDistance[0]['destination_airport']['iata'],
+    const minDist = { from: sortedByDistance[0]['source_airport']['name'], 
+                      to: sortedByDistance[0]['destination_airport']['name'],
                       distance: sortedByDistance[0]['direct_distance']
                    }
     const avgDist = { distance: combinedDataWithAirports.reduce((acc, curr) => acc + curr['direct_distance'], 0) / combinedDataWithAirports.length } ;
     console.table({max: maxDist, min: minDist, avg: avgDist});
+
+    const sortedByNumOfAircrafts = sortByNumberOfAircrafts(combinedDataWithAirports);
+    const maxAircrafts = { from: sortedByNumOfAircrafts[sortedByNumOfAircrafts.length - 1]['source_airport']['name'], 
+                      to: sortedByNumOfAircrafts[sortedByNumOfAircrafts.length - 1]['destination_airport']['name'],
+                      airline: sortedByNumOfAircrafts[sortedByNumOfAircrafts.length - 1]['airline']['name'],
+                      number_of_aircrafts: sortedByNumOfAircrafts[sortedByNumOfAircrafts.length - 1]['aircraft'].join(', ')
+                    }
+
+    console.table(maxAircrafts);          
 }
 
 main();

@@ -46,7 +46,7 @@ function main() {
     // })
 
     // exportDataToFile("Combined_Data.json", combinedData);
-    const combinedData = JSON.parse(readFileSync("Combined_Data.json", "utf8"));
+    const combinedData = JSON.parse(readFileSync("../Combined_Data.json", "utf8"));
     const combinedDataWithDistance = mapData(combinedData, mapDirectDistanceBetweenAirports).data;
     const combinedDataWithAirports = mapData(combinedDataWithDistance, mapPairOfAirports).data;
 

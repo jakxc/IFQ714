@@ -5,9 +5,10 @@ import {
     filterByAirline, 
     filterByAircraft, 
     mapDirectDistanceBetweenAirports, 
+    mapPairOfAirports,
     filterAirportsByCity,
     filterAirportsByName,
-    mapPairOfAirports
+    mapTimeZone
  } from './functions.js';
 
 // Filters and search
@@ -25,7 +26,7 @@ const airportsDisplayDiv = document.querySelector("#airportFilterDisplayDiv")
 let flightsData = [];
 let airportsData = [];
 
-function groupDataByAirportPairs(dataset) {
+function groupDataBySourceDest(dataset) {
     const obj = {};
 
     dataset.forEach(el => {
@@ -51,9 +52,9 @@ function displayFlights(dataset) {
         return;
     }
 
-    const dataObj = groupDataByAirportPairs(dataset);
+    const dataObj = groupDataBySourceDest(dataset);
 
-    Object.keys(dataObj).forEach((key, i) => {
+    Object.keys(dataObj).sort().forEach((key, i) => {
         let airlineWithAircrafts = []
         for (const k in dataObj[key]['airline_aircraft']) {
             airlineWithAircrafts.push(`${k} (<span class='fs-italic'>${dataObj[key]['airline_aircraft'][k].join(', ')}</span>)`)
@@ -92,20 +93,20 @@ function displayAirports(dataset) {
     })
 }
 
-function appendOptionsToDropdown(dropdown, callback, dataset) {
-    const mappedData = dataset.map(callback); 
+function appendOptionsToDropdown(dropdown, dataset, propOne="", propTwo="") {
     let result = [];
-    mappedData.forEach(el => {
-        if (Array.isArray(el)) {
-            el.forEach(e => {
+    dataset.forEach(el => {
+        const val = propTwo ? el[propOne][propTwo] : el[propOne];
+        if (Array.isArray(val)) {
+            val.forEach(e => {
                 if (!result.includes(e) && e) result.push(e);
             })
         } else {
-            if (!result.includes(el) && el) result.push(el);
+            if (!result.includes(val) && val) result.push(val);
         }
     })
 
-    result.sort().forEach((el, i) => {
+    result.sort().forEach(el => {
         let opt = document.createElement("option");
         opt.value = el;
         opt.text = el;
@@ -161,9 +162,10 @@ async function getFlightsData() {
     try {
         const res = await fetch('./Combined_Data.json');
         let data = await res.json();
-        return data.map(mapDirectDistanceBetweenAirports).map(mapPairOfAirports);
+        return data;
     } catch (error) {
         console.log(error);
+        flightsDisplayDiv.innerHTML = `<div class="text-error fw-bold">Unable to retrieve flights data. Error: ${error.message}</div>`
     }
 }
 
@@ -171,30 +173,31 @@ async function getAirportsData() {
     try {
         const res = await fetch('./A2_Airports.json');
         let data = await res.json();
-        return mapData(data, mapDirectDistanceBetweenAirports)['data'];
+        return data;
     } catch(error) {
         console.log(error);
+        airportsDisplayDiv.innerHTML = `<div class="text-error fw-bold">Unable to retrieve airports data. Error: ${error.message}</div>`
     }
 }
 
 getFlightsData()
-.then(data => flightsData = data)
+.then(data => flightsData = mapData(mapData(data, mapDirectDistanceBetweenAirports)['data'], mapPairOfAirports)['data'])
 .then(() => {
     displayFlights(flightsData);
-    appendOptionsToDropdown(sourceAirportFilter, (el) => el['source_airport']['name'], flightsData);
-    appendOptionsToDropdown(destinationAirportFilter, (el) => el['destination_airport']['name'], flightsData);
-    appendOptionsToDropdown(airlineFilter, (el) => el['airline']['name'], flightsData);
-    appendOptionsToDropdown(aircraftFilter, (el) => el['aircraft'], flightsData);
+    appendOptionsToDropdown(sourceAirportFilter, flightsData, 'source_airport', 'name');
+    appendOptionsToDropdown(destinationAirportFilter, flightsData, 'destination_airport', 'name');
+    appendOptionsToDropdown(airlineFilter, flightsData, 'airline', 'name');
+    appendOptionsToDropdown(aircraftFilter, flightsData, 'aircraft');
 })
-.catch(error => console.log(error));
+.catch(error => console.log(error.message));
 
 getAirportsData()
-.then(data => airportsData = data)
+.then(data => airportsData = mapData(data, mapTimeZone)['data'])
 .then(() => {
     displayAirports(airportsData);
-    appendOptionsToDropdown(cityFilter, (el) => el['city'], airportsData);
+    appendOptionsToDropdown(cityFilter, airportsData, 'city');
 })
-.catch(error => console.log(error));
+.catch(error => console.log(error.message));
 
 sourceAirportFilter.addEventListener('change', (event) => {
     displayFlights(filterFlights(flightsData));

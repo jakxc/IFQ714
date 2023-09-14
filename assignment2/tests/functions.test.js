@@ -28,7 +28,7 @@ describe('The getAirportById() method', function () {
   });
 
   test ('Input of data and non-exisiting id, output should return undefined', () => {
-    expect(getAirportById(tempData, 987654321)).toBeUndefined();
+    expect(getAirportById(tempData, 987654321425345)).toBeUndefined();
   });
 
   test ('Input of data and invalid id, should console log error message', () => {

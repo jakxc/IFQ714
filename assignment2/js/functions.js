@@ -239,7 +239,7 @@ export function sortByNumberOfAircrafts(dataset) {
  * Returns element with additional pair of airports property
  *
  * @param {object} flight The element to be modified.
- * @return {object} clone flight object with addition pair of airports. 
+ * @return {object} clone flight object with additional pair_of_airports property. 
  */
 export function mapPairOfAirports(flight) {
     const airports = [flight['source_airport']['name'],  flight['destination_airport']['name']];
@@ -254,7 +254,7 @@ export function mapPairOfAirports(flight) {
  * Returns element with additional direct distance property
  *
  * @param {object} flight The element to be modified.
- * @return {object} clone flight object with addition direct distance. 
+ * @return {object} clone flight object with additional direct_distance property. 
  */
 export function mapDirectDistanceBetweenAirports(flight) {
     const haversineDistanceBetweenPoints = (lat1, lon1, lat2, lon2) => {
@@ -284,6 +284,19 @@ export function mapDirectDistanceBetweenAirports(flight) {
     const cloneFlight = Object.assign({}, flight)
     cloneFlight['direct_distance'] = directDist;
     
+    return cloneFlight;
+}
+
+/**
+ * Returns element with modified timezone property
+ *
+ * @param {object} airport The element to be modified.
+ * @return {object} clone airport object with modified timezone property. 
+ */
+export function mapTimeZone(airport) {
+    const cloneFlight = Object.assign({}, airport);
+
+    cloneFlight['timezone'] = `UTC +${airport['timezone']}`;
     return cloneFlight;
 }
 

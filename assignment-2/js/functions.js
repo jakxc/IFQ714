@@ -1,4 +1,10 @@
 // Step 1
+
+/**
+ * Returns parsed JSON dataset
+ *
+ * @return {object} dataset to be parsed
+ */
 export function parseData(dataSet) {
     return JSON.parse(dataSet);
 }
@@ -94,13 +100,21 @@ export function getAirportByIata(dataset, iata) {
 // Step 2
 
 // Mapping function
+/**
+ * Returns object with timestamp and data property 
+ *
+ * @param {object} dataset The data array.
+ * @param {object} callback The callback function
+ * @return {object} object containing timestamp property and data property with value of mapped data. 
+ */
 export function mapData(dataset, callback) {
     const clonedData = Array.from(dataset);
     const timestamp = new Date();
+    const mappedData = clonedData.map(callback);
 
     return {
         timestamp: timestamp,
-        data: clonedData.map(callback)
+        data: mappedData
     };
 }
 
